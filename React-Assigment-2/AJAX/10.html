@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(to bottom, #1e3c72, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            width: 90%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        .search {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .search input {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+            transition: background 0.3s;
+        }
+        .search input::placeholder {
+            color: #ddd;
+        }
+        .search input:focus {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .search button {
+            background: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 0 16px;
+            color: #2a5298;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .search button:hover {
+            background: #f1f1f1;
+        }
+        .weather-icon {
+            width: 120px;
+            margin: 20px auto;
+        }
+        .weather .temp {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .weather .city {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+        .details {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .col img {
+            width: 32px;
+            margin-bottom: 8px;
+        }
+        .col .humidity,
+        .col .wind {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .col p:last-child {
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+    </style>
+    
+    <script src="../jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter the City name" spellcheck="false">
+            <button><img src="images/search.png" alt="search"></button>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" alt="weather-icon" class="weather-icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">Surat</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="images/humidity.png" alt="humidity-icon">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png" alt="wind-icon">
+                    <div>
+                        <p class="wind">15 km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     
+        <script>
+            $(document).ready(function() {
+                // Replace 'YOUR_API_KEY' with your actual OpenWeatherMap API key
+                const apiKey = '50e878f2d5ea8daa810816e981a18a1c';
+                
+                $('button').click(function() {
+                const city = $('input').val();
+                if (city) {
+                    $.ajax({
+                        url: `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            console.log(data);
+                            $('.temp').text(`${data.main.temp}°C`);
+                            $('.city').text(data.name);
+                            $('.humidity').text(`${data.main.humidity}%`);
+                            $('.wind').text(`${data.wind.speed} km/h`);
+    
+                            // Update weather icon based on weather condition
+                            const weatherIcon = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+                            $('.weather-icon').attr('src', weatherIcon);
+                        },
+                        error: function() {
+                            alert('City not found, please try again');
+                        }
+                    });
+                } else {
+                    alert('Please enter a city name');
+                }
+            });
+        });
+    </script>
+
+    <!-- <script src="./weather.js"></script> -->
+    
+</body>
+</html>
+
+
